@@ -74,7 +74,7 @@ dependencies = [
  "blinksy",
  "defmt 1.0.1",
  "esp-backtrace",
- "esp-bootloader-esp-idf 0.4.0",
+ "esp-bootloader-esp-idf",
  "esp-hal",
  "esp-println",
  "heapless 0.9.2",
@@ -614,28 +614,12 @@ dependencies = [
  "defmt 1.0.1",
  "document-features",
  "esp-config",
- "esp-metadata-generated 0.3.0",
+ "esp-metadata-generated",
  "esp-println",
  "heapless 0.9.2",
  "riscv",
  "semihosting",
  "xtensa-lx",
-]
-
-[[package]]
-name = "esp-bootloader-esp-idf"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c319c4a24fb44ef4c5f9854ff3dc6010eb8f15a6613d024227aa2355e3f6a334"
-dependencies = [
- "cfg-if",
- "defmt 1.0.1",
- "document-features",
- "embedded-storage",
- "esp-config",
- "esp-rom-sys",
- "jiff",
- "strum",
 ]
 
 [[package]]
@@ -649,8 +633,8 @@ dependencies = [
  "document-features",
  "embedded-storage",
  "esp-config",
- "esp-hal-procmacros 0.21.0",
- "esp-metadata-generated 0.3.0",
+ "esp-hal-procmacros",
+ "esp-metadata-generated",
  "esp-rom-sys",
  "jiff",
  "strum",
@@ -663,7 +647,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "102871054f8dd98202177b9890cb4b71d0c6fe1f1413b7a379a8e0841fc2473c"
 dependencies = [
  "document-features",
- "esp-metadata-generated 0.3.0",
+ "esp-metadata-generated",
  "serde",
  "serde_yaml",
  "somni-expr",
@@ -698,8 +682,8 @@ dependencies = [
  "embedded-io-async 0.7.0",
  "enumset",
  "esp-config",
- "esp-hal-procmacros 0.21.0",
- "esp-metadata-generated 0.3.0",
+ "esp-hal-procmacros",
+ "esp-metadata-generated",
  "esp-riscv-rt",
  "esp-rom-sys",
  "esp-sync",
@@ -729,20 +713,6 @@ dependencies = [
 
 [[package]]
 name = "esp-hal-procmacros"
-version = "0.20.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9fd82a6506fb08d53a1086d165d92f085717aa9c59e67ac87a9e6f8acdcf6897"
-dependencies = [
- "document-features",
- "proc-macro-crate",
- "proc-macro2",
- "quote",
- "syn 2.0.114",
- "termcolor",
-]
-
-[[package]]
-name = "esp-hal-procmacros"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3e025a7a7a0affdb4ff913b5c4494aef96ee03d085bf83c27453ae3a71d50da6"
@@ -758,12 +728,6 @@ dependencies = [
 
 [[package]]
 name = "esp-metadata-generated"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b18b1787dd3adea642fb529dd83fe558a08ace365bbaede4643a8959992900f4"
-
-[[package]]
-name = "esp-metadata-generated"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9a93e39c8ad8d390d248dc7b9f4b59a873f313bf535218b8e2351356972399e3"
@@ -776,7 +740,7 @@ checksum = "5a30e6c9fbcc01c348d46706fef8131c7775ab84c254a3cd65d0cd3f6414d592"
 dependencies = [
  "defmt 1.0.1",
  "document-features",
- "esp-metadata-generated 0.3.0",
+ "esp-metadata-generated",
  "esp-sync",
  "log",
  "portable-atomic",
@@ -802,14 +766,14 @@ checksum = "cd66cccc6dd2d13e9f33668a57717ab14a6d217180ec112e6be533de93e7ecbf"
 dependencies = [
  "cfg-if",
  "document-features",
- "esp-metadata-generated 0.3.0",
+ "esp-metadata-generated",
 ]
 
 [[package]]
 name = "esp-rtos"
-version = "0.1.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d01dbf6e54315b6e05da3ad828c7da1ba98f541eb8b0c5d5d260b8eb3b64a8cd"
+checksum = "162ec711c8d06e79c67b75d01595539e86b0aac209643af98ca87a12250428b3"
 dependencies = [
  "cfg-if",
  "defmt 1.0.1",
@@ -820,8 +784,8 @@ dependencies = [
  "embassy-time-queue-utils",
  "esp-config",
  "esp-hal",
- "esp-hal-procmacros 0.20.0",
- "esp-metadata-generated 0.2.0",
+ "esp-hal-procmacros",
+ "esp-metadata-generated",
  "esp-sync",
  "portable-atomic",
 ]
@@ -837,7 +801,7 @@ dependencies = [
  "document-features",
  "embassy-sync 0.6.2",
  "embassy-sync 0.7.2",
- "esp-metadata-generated 0.3.0",
+ "esp-metadata-generated",
  "riscv",
  "xtensa-lx",
 ]
@@ -1016,7 +980,7 @@ dependencies = [
  "embassy-time",
  "esp-alloc",
  "esp-backtrace",
- "esp-bootloader-esp-idf 0.3.0",
+ "esp-bootloader-esp-idf",
  "esp-hal",
  "esp-println",
  "esp-rtos",
