@@ -8,78 +8,83 @@
 //!
 //! - ESP-specific driver for clockless (e.g. WS2812) LEDs, using [RMT (Remote Control Module)][RMT] peripheral
 //! - ESP-specific elapsed time helper
+//! - Buffer size calculation helpers for optimal RMT memory usage
 //!
 //! [RMT]: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/rmt.html
 //!
 //! ## Example
 //!
+//! This example demonstrates how to control a WS2812 LED strip using the RMT peripheral with a rainbow pattern.
+//!
 //! ```rust
 //! #![no_std]
 //! #![no_main]
 //!
-//! use esp_hal as hal;
-//! use esp_alloc as _;
+//! #[cfg(feature = "backtrace")]
+//! use esp_backtrace as _;
+//!
 //! use blinksy::{
-//!     ControlBuilder,
 //!     driver::ClocklessDriver,
 //!     layout::Layout1d,
 //!     layout1d,
 //!     leds::Ws2812,
 //!     patterns::rainbow::{Rainbow, RainbowParams},
+//!     ControlBuilder,
 //! };
-//! use blinksy_esp::{rmt::ClocklessRmtBuilder, time::elapsed};
+//! use blinksy_esp::{rmt::rmt_buffer_size, rmt::ClocklessRmtBuilder, time::elapsed};
 //!
-//! #[hal::main]
+//! esp_bootloader_esp_idf::esp_app_desc!();
+//!
+//! #[esp_hal::main]
 //! fn main() -> ! {
-//!     let cpu_clock = hal::clock::CpuClock::max();
-//!     let config = hal::Config::default().with_cpu_clock(cpu_clock);
-//!     let p = hal::init(config);
+//!     // esp-hal configuration
+//!     let cpu_clock = esp_hal::clock::CpuClock::max();
+//!     let config = esp_hal::Config::default().with_cpu_clock(cpu_clock);
+//!     let p = esp_hal::init(config);
 //!
-//!     // Define the LED layout (1D strip of 300 pixels)
-//!     layout1d!(Layout, 60 * 5);
+//!     // Setup ESP32 RMT driver
+//!     let rmt_clk_freq = esp_hal::time::Rate::from_mhz(80);
+//!     let rmt = esp_hal::rmt::Rmt::new(p.RMT, rmt_clk_freq).unwrap();
 //!
-//!     // Setup the WS2812 driver using RMT.
+//!     let data_pin = p.GPIO4; // Change to the GPIO pin connected to your WS2812 data line
+//!     let rmt_channel = rmt.channel0;
+//!
+//!     // Define a 1D layout (strip) of 12 pixels
+//!     layout1d!(Layout, 12);
+//!
+//!     // Setup the WS2812 driver and writer
 //!     let ws2812_driver = {
-//!         // IMPORTANT: Change `p.GPIO16` to the GPIO pin connected to your WS2812 data line.
-//!         let data_pin = p.GPIO16;
-//!
-//!         // Initialize RMT peripheral (typical base clock 80 MHz).
-//!         let rmt_clk_freq = hal::time::Rate::from_mhz(80);
-//!         let rmt = hal::rmt::Rmt::new(p.RMT, rmt_clk_freq).unwrap();
-//!         let rmt_channel = rmt.channel0;
-//!
-//!         // Create the driver using the ClocklessRmt builder.
-//!         ClocklessDriver::default().with_led::<Ws2812>().with_writer(
-//!             ClocklessRmtBuilder::default()
-//!                 .with_rmt_buffer_size::<{ Layout::PIXEL_COUNT * 3 * 8 + 1 }>()
-//!                 .with_led::<Ws2812>()
-//!                 .with_channel(rmt_channel)
-//!                 .with_pin(data_pin)
-//!                 .build(),
-//!         )
+//!         const RMT_BUFF_SIZE: usize = rmt_buffer_size::<Ws2812>(Layout::PIXEL_COUNT);
+//!         ClocklessDriver::default()
+//!             .with_led::<Ws2812>() // Specify the LED type
+//!             .with_writer(
+//!                 ClocklessRmtBuilder::default()
+//!                     .with_rmt_buffer_size::<RMT_BUFF_SIZE>()
+//!                     .with_led::<Ws2812>()
+//!                     .with_channel(rmt_channel)
+//!                     .with_pin(data_pin)
+//!                     .build(),
+//!             )
 //!     };
 //!
-//!     // Build the Blinky controller
+//!     // Setup the Blinksy controller
 //!     let mut control = ControlBuilder::new_1d()
-//!         .with_layout::<Layout, { Layout::PIXEL_COUNT }>()
-//!         .with_pattern::<Rainbow>(RainbowParams {
-//!             ..Default::default()
-//!         })
+//!         .with_layout::<Layout, { Layout::PIXEL_COUNT }>() // Specify the layout
+//!         .with_pattern::<Rainbow>(RainbowParams::default()) // Use the Rainbow pattern with default parameters
 //!         .with_driver(ws2812_driver)
 //!         .with_frame_buffer_size::<{ Ws2812::frame_buffer_size(Layout::PIXEL_COUNT) }>()
 //!         .build();
 //!
-//!     control.set_brightness(0.2); // Set initial brightness (0.0 to 1.0)
+//!     // Set initial brightness (0.0 to 1.0)
+//!     control.set_brightness(0.5);
 //!
-//!     control.set_color_correction(blinksy::color::ColorCorrection {
-//!         red: 0.0,
-//!         green: 0.0,
-//!         blue: 1.0,
-//!     });
+//!     let delay = esp_hal::delay::Delay::new();
 //!
 //!     loop {
 //!         let elapsed_in_ms = elapsed().as_millis();
-//!         control.tick(elapsed_in_ms).unwrap();
+//!         control.tick(elapsed_in_ms).unwrap(); // Update the control with elapsed time, permitting pattern animation
+//!
+//!         delay.delay_millis(10);
 //!     }
 //! }
 //! ```
