@@ -4,6 +4,9 @@
 #[cfg(feature = "backtrace")]
 use esp_backtrace as _;
 
+#[cfg(feature = "defmt")]
+use esp_println as _;
+
 use blinksy::{
     driver::ClocklessDriver,
     layout::Layout1d,
