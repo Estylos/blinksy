@@ -110,7 +110,11 @@ where
             delay_ms,
         } = *params;
 
-        let elapsed = time_in_ms.rem_euclid(2 * delay_ms);
+        let elapsed = if delay_ms > 0 {
+            time_in_ms % (2 * delay_ms)
+        } else {
+            0
+        };
         let current_color = if elapsed < delay_ms { color1 } else { color2 };
 
         Layout::points().map(move |_| current_color)
@@ -127,7 +131,6 @@ where
     type Color = Color;
 
     /// Creates a new Blink pattern with the specified parameters.
-    // TODO: Validate that delay_ms is greater than zero. How? assert? default value? result?
     fn new(params: Self::Params) -> Self {
         Self { params }
     }
@@ -142,7 +145,11 @@ where
             delay_ms,
         } = *params;
 
-        let elapsed = time_in_ms.rem_euclid(2 * delay_ms);
+        let elapsed = if delay_ms > 0 {
+            time_in_ms % (2 * delay_ms)
+        } else {
+            0
+        };
         let current_color = if elapsed < delay_ms { color1 } else { color2 };
 
         Layout::points().map(move |_| current_color)
@@ -159,7 +166,6 @@ where
     type Color = Color;
 
     /// Creates a new Blink pattern with the specified parameters.
-    // TODO: Validate that delay_ms is greater than zero. How? assert? default value? result?
     fn new(params: Self::Params) -> Self {
         Self { params }
     }
@@ -174,7 +180,11 @@ where
             delay_ms,
         } = *params;
 
-        let elapsed = time_in_ms.rem_euclid(2 * delay_ms);
+        let elapsed = if delay_ms > 0 {
+            time_in_ms % (2 * delay_ms)
+        } else {
+            0
+        };
         let current_color = if elapsed < delay_ms { color1 } else { color2 };
 
         Layout::points().map(move |_| current_color)
