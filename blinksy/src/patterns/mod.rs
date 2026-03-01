@@ -7,6 +7,7 @@
 //! - [`blink`]: A simple on/off blink pattern.
 //! - [`solid`]: A solid color pattern.
 //! - [`chase`]: A moving chase pattern.
+//! - [`wipe`]: A color wipe pattern.
 //!
 //! If you want help to port a pattern from FastLED / WLED to Rust, [make an issue](https://github.com/ahdinosaur/blinksy/issues)!
 
@@ -15,3 +16,4 @@ pub mod chase;
 pub mod noise;
 pub mod rainbow;
 pub mod solid;
+pub mod wipe;
