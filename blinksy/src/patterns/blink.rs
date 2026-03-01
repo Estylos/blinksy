@@ -24,7 +24,8 @@
 //!     .with_pattern::<Blink<Srgb>>(BlinkParams {
 //!         color1: Srgb::new(1.0, 0.0, 0.0),  // Red
 //!         color2: Srgb::new(0.0, 1.0, 0.0),  // Green
-//!         delay_ms: 500,
+//!         color1_ms: 1000,
+//!         color2_ms: 1000,
 //!     })
 //!     .with_driver(/* Your driver */)
 //!     .with_frame_buffer_size::</* Length of frame buffer */>()
@@ -36,7 +37,8 @@
 //!     .with_pattern::<Blink<Okhsv>>(BlinkParams {
 //!         color1: Okhsv::new(29./360., 1.0, 0.57),   // Red
 //!         color2: Okhsv::new(142./360., 1.0, 0.87),  // Green
-//!         delay_ms: 500,
+//!         color1_ms: 1000,
+//!         color2_ms: 1000,
 //!     })
 //!     .with_driver(/* Your driver */)
 //!     .with_frame_buffer_size::</* Length of frame buffer */>()
@@ -61,8 +63,10 @@ pub struct BlinkParams<Color> {
     pub color1: Color,
     /// Second color
     pub color2: Color,
-    /// Delay in milliseconds between color changes. Must be greater than zero
-    pub delay_ms: u64,
+    /// Duration in milliseconds for the first color
+    pub color1_ms: u64,
+    /// Duration in milliseconds for the second color
+    pub color2_ms: u64,
 }
 
 impl Default for BlinkParams<Srgb> {
@@ -70,7 +74,8 @@ impl Default for BlinkParams<Srgb> {
         Self {
             color1: Srgb::new(1.0, 0.0, 0.0), // Red
             color2: Srgb::new(0.0, 0.0, 1.0), // Blue
-            delay_ms: 1000,
+            color1_ms: 1000,
+            color2_ms: 1000,
         }
     }
 }
@@ -95,7 +100,6 @@ where
     type Color = Color;
 
     /// Creates a new Blink pattern with the specified parameters.
-    // TODO: Validate that delay_ms is greater than zero. How? assert? default value? result?
     fn new(params: Self::Params) -> Self {
         Self { params }
     }
@@ -107,15 +111,17 @@ where
         let BlinkParams {
             color1,
             color2,
-            delay_ms,
+            color1_ms,
+            color2_ms,
         } = *params;
 
-        let elapsed = if delay_ms > 0 {
-            time_in_ms % (2 * delay_ms)
+        let total_ms = color1_ms + color2_ms;
+        let elapsed = if total_ms > 0 {
+            time_in_ms % total_ms
         } else {
             0
         };
-        let current_color = if elapsed < delay_ms { color1 } else { color2 };
+        let current_color = if elapsed < color1_ms { color1 } else { color2 };
 
         Layout::points().map(move |_| current_color)
     }
@@ -142,15 +148,17 @@ where
         let BlinkParams {
             color1,
             color2,
-            delay_ms,
+            color1_ms,
+            color2_ms,
         } = *params;
 
-        let elapsed = if delay_ms > 0 {
-            time_in_ms % (2 * delay_ms)
+        let total_ms = color1_ms + color2_ms;
+        let elapsed = if total_ms > 0 {
+            time_in_ms % total_ms
         } else {
             0
         };
-        let current_color = if elapsed < delay_ms { color1 } else { color2 };
+        let current_color = if elapsed < color1_ms { color1 } else { color2 };
 
         Layout::points().map(move |_| current_color)
     }
@@ -177,15 +185,17 @@ where
         let BlinkParams {
             color1,
             color2,
-            delay_ms,
+            color1_ms,
+            color2_ms,
         } = *params;
 
-        let elapsed = if delay_ms > 0 {
-            time_in_ms % (2 * delay_ms)
+        let total_ms = color1_ms + color2_ms;
+        let elapsed = if total_ms > 0 {
+            time_in_ms % total_ms
         } else {
             0
         };
-        let current_color = if elapsed < delay_ms { color1 } else { color2 };
+        let current_color = if elapsed < color1_ms { color1 } else { color2 };
 
         Layout::points().map(move |_| current_color)
     }
